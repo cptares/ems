@@ -1,6 +1,7 @@
-const CACHE_NAME = "interventi118-v1";
+const CACHE_NAME = "interventi118-v2";
 const APP_SHELL = [
   "./",
+  "./app.html",
   "./phone-coordinate-demo.html",
   "./manifest.webmanifest",
   "./assets/icon-192.svg",

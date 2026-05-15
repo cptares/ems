@@ -1,7 +1,7 @@
 {
   "name": "Interventi 118",
   "short_name": "Interventi 118",
-  "start_url": "./phone-coordinate-demo.html",
+  "start_url": "./app.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
