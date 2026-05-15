@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#8e1018" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -215,11 +215,21 @@
       font-weight: 800;
       padding: 10px 0;
       cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
     }
 
     .num-key:active {
       transform: translateY(1px);
       background: rgba(26, 115, 232, 0.08);
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      touch-action: manipulation;
     }
 
     .farmaco-item {
@@ -2091,7 +2101,7 @@
       const phoneKeypad = document.getElementById("phone-keypad");
 
       if (dobInput && dobKeypad) {
-        dobKeypad.addEventListener("click", (event) => {
+        dobKeypad.addEventListener("pointerdown", (event) => {
           const keyButton = event.target.closest(".num-key");
           if (!keyButton) return;
 
@@ -2113,15 +2123,15 @@
             dobInput.value = formatDateDigits(nextDigits);
 
             if (nextDigits.length === 8 && phoneInput) {
-              phoneInput.scrollIntoView({ behavior: "smooth", block: "end" });
-              menuContent.scrollTo({ top: menuContent.scrollHeight, behavior: "smooth" });
+              phoneInput.scrollIntoView({ behavior: "auto", block: "end" });
+              menuContent.scrollTo({ top: menuContent.scrollHeight, behavior: "auto" });
             }
           }
         });
       }
 
       if (phoneInput && phoneKeypad) {
-        phoneKeypad.addEventListener("click", (event) => {
+        phoneKeypad.addEventListener("pointerdown", (event) => {
           const keyButton = event.target.closest(".num-key");
           if (!keyButton) return;
 
@@ -2261,7 +2271,7 @@
         const kp = document.getElementById("kp-" + field);
         if (!input || !kp) return;
 
-        kp.addEventListener("click", (event) => {
+        kp.addEventListener("pointerdown", (event) => {
           const btn = event.target.closest(".num-key");
           if (!btn) return;
           const key = btn.dataset.vitKey;
@@ -2282,7 +2292,7 @@
             if (nd.length === vitMax[field]) {
               const nextEl = document.getElementById(vitNext[field]);
               if (nextEl) {
-                nextEl.scrollIntoView({ behavior: "smooth", block: "center" });
+                nextEl.scrollIntoView({ behavior: "auto", block: "center" });
                 if (nextEl.tagName === "TEXTAREA") nextEl.focus();
               }
             }
@@ -2828,6 +2838,24 @@
         });
       });
     }
+
+    // Blocca zoom pinch/double-tap/cmd+wheel in modo aggressivo su mobile e desktop touch.
+    ["gesturestart", "gesturechange", "gestureend"].forEach((evtName) => {
+      document.addEventListener(evtName, (e) => e.preventDefault(), { passive: false });
+    });
+
+    let lastTouchEnd = 0;
+    document.addEventListener("touchend", (e) => {
+      const now = Date.now();
+      if (now - lastTouchEnd < 300) {
+        e.preventDefault();
+      }
+      lastTouchEnd = now;
+    }, { passive: false });
+
+    window.addEventListener("wheel", (e) => {
+      if (e.ctrlKey) e.preventDefault();
+    }, { passive: false });
   </script>
 </body>
 </html>
